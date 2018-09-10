@@ -17,7 +17,7 @@ It is released under the MIT license for the use of the community, pull requests
 
 * Run without parameters to listen on default port (8080):
 
-    > python weblogic_server.py
+    > python3 weblogic_server.py
 
 * Run with --help to see other command line parameters
 

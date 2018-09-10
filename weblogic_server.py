@@ -3,11 +3,10 @@
 import os
 import socket
 import logging
-from StringIO import StringIO
+from io import BytesIO
 from xml.etree import ElementTree
-from BaseHTTPServer import HTTPServer
-from SocketServer import ThreadingMixIn
-from SimpleHTTPServer import SimpleHTTPRequestHandler
+from socketserver import ThreadingMixIn
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 
 class NonBlockingHTTPServer(ThreadingMixIn, HTTPServer):
@@ -58,7 +57,7 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
     def do_POST(self):
         data_len = int(self.headers.get('Content-length', 0))
         data = self.rfile.read(data_len) if data_len else ''
-        if self.EXPLOIT_STRING in data:
+        if self.EXPLOIT_STRING.encode() in data:
             xml = ElementTree.fromstring(data)
             payload = []
             for void in xml.iter('void'):
@@ -74,18 +73,18 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
         self.send_header('Content-Length', int(len(body)))
         self.send_header('Content-Type', 'text/html; charset=utf-8')
         self.end_headers()
-        self.wfile.write(body)
+        self.wfile.write(body.encode())
 
     def send_file(self, filename, status_code=200):
         try:
             with open(os.path.join(self.basepath, 'wls-wsat', filename), 'rb') as fh:
                 body = fh.read()
-                body = body.replace('%%HOST%%', self.headers.get('Host'))
+                body = body.replace(b'%%HOST%%', self.headers.get('Host').encode())
                 self.send_response(status_code)
                 self.send_header('Content-Length', int(len(body)))
                 self.send_header('Content-Type', 'text/html; charset=utf-8')
                 self.end_headers()
-                return StringIO(body)
+                return BytesIO(body)
         except IOError:
             return self.send_file('404.html', 404)
 
@@ -122,7 +121,7 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
             method = getattr(self, mname)
             method()
             self.wfile.flush()  # actually send the response if not already done.
-        except socket.timeout, e:
+        except socket.timeout as e:
             # a read or a write timed out.  Discard this connection
             self.log_error("Request timed out: %r", e)
             self.close_connection = 1
