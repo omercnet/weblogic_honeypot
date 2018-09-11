@@ -93,9 +93,9 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         data_len = int(self.headers.get('Content-length', 0))
-        data = self.rfile.read(data_len) if data_len else ''
-        if self.EXPLOIT_STRING.encode() in data:
-            xml = ElementTree.fromstring(data)
+        self.data = self.rfile.read(data_len) if data_len else ''
+        if self.EXPLOIT_STRING.encode() in self.data:
+            xml = ElementTree.fromstring(self.data)
             payload = []
             for void in xml.iter('void'):
                 for s in void.iter('string'):
