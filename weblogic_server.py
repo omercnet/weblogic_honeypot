@@ -59,6 +59,7 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
     basepath = os.path.dirname(os.path.abspath(__file__))
 
     alert_function = None
+    listening_port = None
 
     hpfl = None
     data = None
@@ -120,6 +121,7 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
             with open(os.path.join(self.basepath, 'wls-wsat', filename), 'rb') as fh:
                 body = fh.read()
                 body = body.replace(b'%%HOST%%', self.headers.get('Host').encode())
+                body = body.replace(b'%%PORT%%', str(self.listening_port).encode('utf-8'))
                 self.send_response(status_code)
                 self.send_header('Content-Length', int(len(body)))
                 self.send_header('Content-Type', 'text/html; charset=utf-8')
@@ -143,19 +145,6 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
         for k,v in self.headers._headers:
             rheaders[k] = v
         self.hpfl.log(self.req_category, {
-                      'classification': self.req_classification,
-                      'timestamp': self.timestamp,
-                      'vulnerability': self.vulnerability,
-                      'src_ip': self.client_address[0],
-                      'src_port': self.client_address[1],
-                      'dest_ip': self.connection.getsockname()[0],
-                      'dest_port': self.connection.getsockname()[1],
-                      'raw_requestline':  self.raw_requestline.decode('utf-8'),
-                      'header': rheaders,
-                      'postdata': postdata,
-                      'exploit_command': self.payload
-                    })
-        print(self.req_category, {
                       'classification': self.req_classification,
                       'timestamp': self.timestamp,
                       'vulnerability': self.vulnerability,
@@ -241,12 +230,13 @@ if __name__ == '__main__':
             logger.setLevel(logging.DEBUG)
 
         requestHandler = WebLogicHandler
+        requestHandler.listening_port = port
         requestHandler.alert_function = alert
         requestHandler.logger = logger
         requestHandler.hpfl = hpfl
 
-        httpd = HTTPServer((host, port), requestHandler)
-        logger.info('Starting server on port {:d}, use <Ctrl-C> to stop'.format(port))
+        httpd = NonBlockingHTTPServer((host, port), requestHandler)
+        logger.info('Starting server on {:s}:{:d}, use <Ctrl-C> to stop'.format(host, port))
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:

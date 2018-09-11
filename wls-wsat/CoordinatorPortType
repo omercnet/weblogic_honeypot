@@ -18,7 +18,7 @@ Information
 <table border="0"><tr><td>Service Name:</td><td>{http://schemas.xmlsoap.org/ws/2004/10/wsat}WSAT10Service</td></tr><tr><td>Port Name:</td><td>{http://schemas.xmlsoap.org/ws/2004/10/wsat}CoordinatorPortTypePort</td></tr></table>
 </td>
 <td>
-<table border="0"><tr><td>Address:</td><td>http://%%HOST%%/wls-wsat/CoordinatorPortType</td></tr><tr><td>WSDL:</td><td><a href="http://%%HOST%%/wls-wsat/CoordinatorPortType?wsdl">http://%%HOST%%/wls-wsat/CoordinatorPortType?wsdl</a></td></tr><tr><td>Implementation class:</td><td>weblogic.wsee.wstx.wsat.v10.endpoint.CoordinatorPortTypePortImpl</td></tr></table>
+<table border="0"><tr><td>Address:</td><td>http://%%HOST%%:%%PORT%%/wls-wsat/CoordinatorPortType</td></tr><tr><td>WSDL:</td><td><a href="http://%%HOST%%:%%PORT%%/wls-wsat/CoordinatorPortType?wsdl">http://%%HOST%%:%%PORT%%/wls-wsat/CoordinatorPortType?wsdl</a></td></tr><tr><td>Implementation class:</td><td>weblogic.wsee.wstx.wsat.v10.endpoint.CoordinatorPortTypePortImpl</td></tr></table>
 </td>
 </tr>
 </table>
