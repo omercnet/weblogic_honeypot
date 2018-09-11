@@ -15,11 +15,24 @@ It is released under the MIT license for the use of the community, pull requests
 
 # Usage
 
-* Run without parameters to listen on default port (8000):
+	Usage: weblogic_server.py [OPTIONS]
 
-    > python3 weblogic_server.py
+	  A low interaction honeypot for the Oracle Weblogic wls-wsat component
+	  capable of detecting CVE-2017-10271, a remote code execution vulnerability
 
-* Run with --help to see other command line parameters
+	Options:
+	  -h, --host TEXT     Host to listen
+	  -p, --port INTEGER  Port to listen
+	  -v, --verbose       Verbose logging
+	  --hpfserver TEXT    hpfeeds Server
+	  --hpfport INTEGER   hpfeeds Port
+	  --hpfident TEXT     hpfeeds Ident
+	  --hpfsecret TEXT    hpfeeds Secret
+	  --hpfchannel TEXT   hpfeeds Channel
+	  --serverid TEXT     hpfeeds ServerID/ServerName
+	  --help              Show this message and exit.
+
+Run without parameters to listen on default port (8000).
 
 
 See also
