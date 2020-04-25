@@ -3,11 +3,11 @@
 import os
 import socket
 import logging
-from StringIO import StringIO
+from io import StringIO
 from xml.etree import ElementTree
-from BaseHTTPServer import HTTPServer
-from SocketServer import ThreadingMixIn
-from SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import HTTPServer
+from socketserver import ThreadingMixIn
+from http.server import SimpleHTTPRequestHandler
 
 
 class NonBlockingHTTPServer(ThreadingMixIn, HTTPServer):
@@ -122,7 +122,7 @@ class WebLogicHandler(SimpleHTTPRequestHandler):
             method = getattr(self, mname)
             method()
             self.wfile.flush()  # actually send the response if not already done.
-        except socket.timeout, e:
+        except socket.timeout as e:
             # a read or a write timed out.  Discard this connection
             self.log_error("Request timed out: %r", e)
             self.close_connection = 1
@@ -167,3 +167,4 @@ if __name__ == '__main__':
         httpd.server_close()
 
     start()
+
